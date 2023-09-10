@@ -5,6 +5,8 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 
 import {
   Dialog,
@@ -25,7 +27,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
-import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -65,7 +66,6 @@ export const InitialModal = () => {
     } finally {
       router.refresh();
       window.location.reload();
-
     }
   };
 
@@ -92,9 +92,7 @@ export const InitialModal = () => {
                 <FormField
                   control={form.control}
                   name="imageUrl"
-                  render={({
-                    field
-                  }) => (
+                  render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <FileUpload
@@ -103,6 +101,7 @@ export const InitialModal = () => {
                           onChange={field.onChange}
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
