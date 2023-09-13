@@ -20,7 +20,7 @@ export async function PATCH(
     const { name, imageUrl } = await req.json();
 
     if (!profile) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("Gau gau", { status: 401 });
     }
 
     const existingServer = await db.server.findUnique({
@@ -65,7 +65,7 @@ export async function DELETE(
     const profile = await currentProfile();
 
     if (!profile) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("Gau gau", { status: 401 });
     }
 
     const existingServer = await db.server.findUnique({

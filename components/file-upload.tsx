@@ -17,7 +17,7 @@ export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
   const fileType = value?.split(".").pop();
   console.log(fileType);
 
-  if (value && fileType === "image") {
+  if (value && fileType !== "pdf") {
     return (
       <div className="relative h-20 w-20">
         <Image fill src={value} alt="Upload" className="rounded-full" />
