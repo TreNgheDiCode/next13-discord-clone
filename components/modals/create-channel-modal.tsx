@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ChannelType } from "@prisma/client";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import {
   Dialog,
@@ -46,7 +47,7 @@ const formSchema = z.object({
   type: z.nativeEnum(ChannelType),
 });
 
-const channelType = {
+const channelMap = {
   TEXT: "Kênh văn bản",
   AUDIO: "Kênh âm thanh",
   VIDEO: "Kênh video",
@@ -57,7 +58,7 @@ export const CreateChannelModal = () => {
 
   const router = useRouter();
 
-  const { server } = data;
+  const { server, channelType } = data;
 
   const isModalOpen = isOpen && type === "createChannel";
 
@@ -65,9 +66,17 @@ export const CreateChannelModal = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: ChannelType.TEXT,
+      type: channelType || ChannelType.TEXT,
     },
   });
+
+  useEffect(() => {
+    if (channelType) {
+      form.setValue("type", channelType);
+    } else {
+      form.setValue("type", ChannelType.TEXT);
+    }
+  }, [channelType, form]);
 
   const isLoading = form.formState.isSubmitting;
 
@@ -150,7 +159,7 @@ export const CreateChannelModal = () => {
                               value={type}
                               className="capitalize"
                             >
-                              {channelType[type]}
+                              {channelMap[type]}
                             </SelectItem>
                           ))}
                         </SelectContent>
