@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { ActionTooltip } from "@/components/action-tooltip";
+import { useModal } from "@/hooks/use-modal-store";
 
 interface ServerChannelProps {
   channel: Channel;
@@ -20,6 +21,8 @@ const iconMap = {
 };
 
 const ServerChannel = ({ channel, server, role }: ServerChannelProps) => {
+  const { onOpen } = useModal();
+
   const params = useParams();
   const router = useRouter();
 
@@ -46,10 +49,21 @@ const ServerChannel = ({ channel, server, role }: ServerChannelProps) => {
       {channel.name.toLowerCase() !== "chung" && role !== MemberRole.GUEST && (
         <div className="ml-auto flex items-center gap-x-2">
           <ActionTooltip label="Chỉnh sửa">
-            <Edit className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-300 transition" />
+            <Edit
+              onClick={() =>
+                onOpen("editChannel", {
+                  server,
+                  channel,
+                })
+              }
+              className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-indigo-600 dark:text-zinc-400 dark:hover:text-indigo-300 transition"
+            />
           </ActionTooltip>
-          <ActionTooltip label="Chỉnh sửa">
-            <Trash className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-300 transition" />
+          <ActionTooltip label="Xóa">
+            <Trash
+              onClick={() => onOpen("deleteChannel", { server, channel })}
+              className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-rose-600 dark:text-zinc-400 dark:hover:text-rose-300 transition"
+            />
           </ActionTooltip>
         </div>
       )}

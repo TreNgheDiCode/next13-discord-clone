@@ -6,7 +6,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ChannelType } from "@prisma/client";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import {
@@ -53,31 +53,29 @@ const channelMap = {
   VIDEO: "Kênh video",
 };
 
-export const CreateChannelModal = () => {
+export const EditChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal();
 
   const router = useRouter();
-  const params = useParams();
 
-  const { channelType } = data;
+  const { server, channel } = data;
 
-  const isModalOpen = isOpen && type === "createChannel";
+  const isModalOpen = isOpen && type === "editChannel";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      type: channelType || ChannelType.TEXT,
+      type: channel?.type || ChannelType.TEXT,
     },
   });
 
   useEffect(() => {
-    if (channelType) {
-      form.setValue("type", channelType);
-    } else {
-      form.setValue("type", ChannelType.TEXT);
+    if (channel) {
+      form.setValue("name", channel.name);
+      form.setValue("type", channel.type);
     }
-  }, [channelType, form]);
+  }, [form, channel]);
 
   const isLoading = form.formState.isSubmitting;
 
@@ -89,12 +87,12 @@ export const CreateChannelModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
-        url: "/api/channels",
+        url: `/api/channels/${channel?.id}`,
         query: {
-          serverId: params.serverId,
+          serverId: server?.id,
         },
       });
-      await axios.post(url, values);
+      await axios.patch(url, values);
 
       router.refresh();
       form.reset();
@@ -110,7 +108,10 @@ export const CreateChannelModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Tạo một kênh mới
+            Chỉnh sửa kênh{" "}
+            <span className="text-indigo-500 text-semibold">
+              #{channel?.name}
+            </span>
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -173,7 +174,7 @@ export const CreateChannelModal = () => {
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant={"primary"} disabled={isLoading}>
-                Khởi tạo
+                Lưu thay đổi
               </Button>
             </DialogFooter>
           </form>
