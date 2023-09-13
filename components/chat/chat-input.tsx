@@ -5,7 +5,8 @@ import * as z from "zod";
 import axios from "axios";
 import qs from "query-string";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Smile } from "lucide-react";
+import { Plus, Router, Smile } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,8 @@ const formSchema = z.object({
 });
 
 const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,8 +42,12 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
       });
 
       await axios.post(url, values);
+
+      form.reset();
+      router.refresh();
     } catch (error) {
       console.log(error);
+      console.log("[MESSAGE_ERROR]");
     }
   };
 
