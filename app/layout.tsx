@@ -7,6 +7,7 @@ import { viVN } from "@clerk/localizations";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { ModalProvider } from "@/components/provider/modal-provider";
+import { SocketProvider } from "@/components/provider/socket-provider";
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -24,15 +25,17 @@ export default function RootLayout({
     <ClerkProvider localization={viVN}>
       <html lang="en" suppressHydrationWarning>
         <body className={cn(font.className, "bg-white dark:bg-[#313338]")}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem={false}
-            storageKey="discord-theme"
-          >
-            <ModalProvider />
-            {children}
-          </ThemeProvider>
+          <SocketProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem={false}
+              storageKey="discord-theme"
+            >
+              <ModalProvider />
+              {children}
+            </ThemeProvider>
+          </SocketProvider>
         </body>
       </html>
     </ClerkProvider>
