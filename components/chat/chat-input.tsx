@@ -5,8 +5,9 @@ import * as z from "zod";
 import axios from "axios";
 import qs from "query-string";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Router, Smile } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,8 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
 
   const router = useRouter();
 
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,6 +43,7 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setLoading(isLoading);
       const url = qs.stringifyUrl({
         url: apiUrl,
         query,
@@ -52,6 +56,8 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
     } catch (error) {
       console.log(error);
       console.log("[MESSAGE_ERROR]");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,7 +79,7 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
                     <Plus className="text-white dark:text-[#313338]" />
                   </button>
                   <Input
-                    disabled={isLoading}
+                    disabled={loading}
                     className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                     placeholder={`Gửi tin nhắn đến ${
                       type === "conversation" ? "@" + name : "#" + name

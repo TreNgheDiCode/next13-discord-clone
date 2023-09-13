@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/provider/theme-provider";
 import { ModalProvider } from "@/components/provider/modal-provider";
 import { SocketProvider } from "@/components/provider/socket-provider";
+import { QueryProvider } from "@/components/provider/query-provider";
 
 const font = Open_Sans({ subsets: ["latin"] });
 
@@ -25,17 +26,17 @@ export default function RootLayout({
     <ClerkProvider localization={viVN}>
       <html lang="en" suppressHydrationWarning>
         <body className={cn(font.className, "bg-white dark:bg-[#313338]")}>
-          <SocketProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem={false}
-              storageKey="discord-theme"
-            >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            storageKey="discord-theme"
+          >
+            <SocketProvider>
               <ModalProvider />
-              {children}
-            </ThemeProvider>
-          </SocketProvider>
+              <QueryProvider>{children}</QueryProvider>
+            </SocketProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
