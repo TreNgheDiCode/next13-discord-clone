@@ -3,7 +3,7 @@ import { db } from "@/lib/prismadb";
 import { Message } from "@prisma/client";
 import { NextResponse } from "next/server";
 
-const MESSAGES_BATCH = 5;
+const MESSAGES_BATCH = 15;
 
 export async function GET(req: Request) {
   try {
@@ -71,7 +71,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
       items: messages,
-      nextCursor
+      nextCursor,
     });
   } catch (error) {
     console.log("[MESSAGES_GET", error);
