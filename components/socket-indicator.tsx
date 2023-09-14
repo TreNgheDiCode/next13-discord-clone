@@ -12,7 +12,7 @@ const SocketIndicator = () => {
         variant={"outline"}
         className="bg-yellow-600 text-white border-none"
       >
-        Đang tải: Đang ổn định tín hiệu...
+        Mất kết nối đến máy chủ...
       </Badge>
     );
   }
@@ -22,7 +22,7 @@ const SocketIndicator = () => {
       variant={"outline"}
       className="bg-emerald-600 text-white border-none"
     >
-      Trực tiếp: Kết nối ổn định
+      Máy chủ kết nối ổn định
     </Badge>
   );
 };

@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import type { Metadata } from "next";
